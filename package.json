@@ -1,0 +1,16 @@
+{
+  "name": "youtubebackend",
+  "version": "1.0.0",
+  "description": "A project for learning complex backend",
+  "keywords": [
+    "javascript",
+    "backend"
+  ],
+  "license": "ISC",
+  "author": "Argha Ghosh",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
