@@ -47,7 +47,7 @@ const userSchema = new Schema(
         },
 
         wacthHistory : [{
-            type : Schema.Types.ObjectID,
+            type : Schema.Types.ObjectId,
             ref : "video"
         }],
 

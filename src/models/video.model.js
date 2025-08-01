@@ -11,7 +11,7 @@ import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
         required :true,
     },
     owner :{
-       type : Schema.Types.ObjectID,
+       type : Schema.Types.ObjectId,
             ref : "User"
     },
     title :{
