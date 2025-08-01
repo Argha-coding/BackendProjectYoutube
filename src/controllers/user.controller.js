@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import jwt from "jsonwebtoken"
 
 const generateRefreshAndAccessTokens  = async(userId ) => {
   try {
@@ -118,7 +119,7 @@ const loginUser =  asyncHandler(async (req,res) => {
     return res
     .status()
     .cookie("accessToken" ,accessToken,options)
-    .cookie("refreshToken",refreshToken,option)
+    .cookie("refreshToken",refreshToken,options)
     .json(
       new ApiResponse(200,
         {
@@ -134,13 +135,58 @@ const loginUser =  asyncHandler(async (req,res) => {
 
 const logoutUser = asyncHandler (async (req,res) => {
   
-  
+  User.findByIdAndUpdate(
+    req.user._id,
+    {
+      $set : {
+          refreshToken : undefined
+
+      } 
+      
+    },
+    {
+      new : true
+    }
+  )
+const options = {
+      httpOnly :true,
+      secure : true
+    }
+
+    return res
+    .status(200)
+    .cookie("accessToken" ,options)
+    .cookie("refreshToken",options)
+    .json(new ApiResponse (200) ,{} , "User loggged Out")
 
 }
 )
 
+
+const refreshAccessToken =  asyncHandler(async(req,res) => {
+
+  const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
+  if (incomingRefreshToken) {
+    throw new ApiError(400,"Unauthorised Access")
+
+  }
+
+ const decodedToken = jwt.verify(
+  incomingRefreshToken,
+  process.env.REFRESH_TOKEN_SECRET
+)
+
+const user = User.findById(decodedToken?._id)
+
+
+})
+
+
+
+
 export { registerUser,
       loginUser,
-      logoutUser
+      logoutUser,
+      refreshAccessToken
 
  };
